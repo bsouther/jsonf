@@ -36,6 +36,7 @@ void process_char(int c){
             return;
         }
     }else{
+        /* Ignore white space if not in string */
         if(!instr){
             if(' ' == c || '\t' == c || '\r' == c || '\n' == c){
                 return;
@@ -47,7 +48,6 @@ void process_char(int c){
             instr = !instr;
         }
         
-        /* Ignore white space unless it's in a string */
         if(!instr){
 
             if(last == '{' || last == '['){
