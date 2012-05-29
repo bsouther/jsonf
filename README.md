@@ -7,9 +7,7 @@ Designed to be used in long running streams.
 Compiling:
     cc -o jsonf jsonf.c
 
-Installing:
-
-    (as root)
+Installing:    (as root)
     
     cp jsonf /usr/bin
     
