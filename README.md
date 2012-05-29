@@ -1,4 +1,3 @@
-
 A very small, lightweight JSON formatter for *nix systems.
 It takes no command line switches, doesn't buffer data or otherwise allocate memory.
 Designed to be used in long running streams.
