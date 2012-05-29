@@ -1,5 +1,5 @@
 A very small, lightweight JSON formatter for *nix systems.
-It takes no command line switches, doesn't buffer data or otherwise allocate memory.
+It takes no command line switches, doesn't call malloc or store any more than the last character read.
 Designed to be used in long running streams.
 
 
