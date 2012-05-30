@@ -1,126 +1,70 @@
-#include <string.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
 
-/*  Globals */
-int  level = -1; 
-int  last  = -1;
-bool instr = false;
-bool inesc = false;
+int padLine(int level){
+    int i;
+    printf("\n");
+    for(i=0; i < level; i++) 
+        printf("    ");
+}
 
-/* Handles each character in the stream */
-void process_char(int c){
+void process_fp(FILE *fp) {
 
-    /* escape */
-    if(instr && c == '\\'){
-        if(inesc){
-            inesc = false;
-            printf("%c",c);
-            last = c;
-            return;
+    int level=0;
+    int last=-1;
+    int c;
+    int instr=0;
+    int inesc=0;
+
+    while ((c=fgetc(fp))!=EOF){
+        if(instr && c == '\\'){    /* escape */
+            inesc=!inesc;
+        }else if (inesc){
+            inesc = 0;
+            if ('"' == c){
+                printf("\"");
+                last = '1';
+                continue;
+            }
         }else{
-            inesc = true;
-            printf("%c",c);
-            last = c;
-            return;
-        }
-    }// \
+            if(last =='"')    
+                instr=!instr;    /* quote */
 
+            if(!instr && last==':') 
+                printf("    ");
 
-    if(inesc){
-        inesc = false;
-        if('"' == c){
-            printf("\"");
-            last = '1';
-            return;
-        }
-    }else{
-        /* Ignore white space if not in string */
-        if(!instr){
-            if(' ' == c || '\t' == c || '\r' == c || '\n' == c){
-                return;
-            }
-        }
+            if(!instr) {
+                if (last == '{' || last == '[')    
+                    padLine(++level);
+                else if (last == ',')
+                    padLine(level);
 
-        /* quote */
-        if(last =='"'){
-            instr = !instr;
-        }
-        
-        if(!instr){
-
-            if(last == '{' || last == '['){
-                level++;
-                printf("\n");
-                padLine();
-            }else if(last == ','){
-                printf("\n");
-                padLine();
-            }
-
-            if(c == '}' || c == ']'){
-                if(level > 0){
-                    level--;
-                }
-                printf("\n");
-                padLine();
-            }else if(c == '{' || c == '['){
-                if(last != ',' && last != '[' && last != '{'){
-                    printf("\n");
-                    padLine();
+                if (c == '}' || c == ']') {
+                    if (level > 0)
+                        level--;    
+                    padLine(level);
+                }else if (c == '{' || c == '[') {
+                    if (last != ',' && last != '[' && last != '{') padLine(level);
                 }
             }
-        }//!instr
-    }//insec
+        }
 
-
-    printf("%c", c);
-    last = c;
-}//process
-
-
-int padLine(){
-    int lvl = level;
-    int i = 0;
-    int padlen = 4;
-    lvl = lvl * padlen;
-    for(; i < lvl; i++){
-        printf(" ");
+        last=c;
+        if (instr || !(' ' == c || '\t' == c || '\r' == c || '\n' == c)) 
+        printf("%c",c);
     }
 }
 
-
-/* The entry point for the program */
 int main(int argc, char *argv[]){
+    FILE *fp=stdin;
 
-    int c;
-    level = 0;
-    c     = -1;
-    instr = 0;
-    inesc = 0;
-    last  = -1;
-
-    if(2 == argc){
-        /* Work from a file */
-        FILE *fp;
+    if (2 == argc){            /* Work from a file */
         fp = fopen(argv[1], "r");
-
-        if(NULL == fp){
-            printf("Unable to open file: %s\n", argv[1]);
-            return 1;
-        }
-
-        while((c = fgetc(fp)) != EOF){
-           process_char(c);
-        }
-        fclose(fp);
-    }else{
-        /* Work from stdin */
-        while((c = getc(stdin)) != EOF){
-            process_char(c);
-        } 
+        if (!fp){printf("Unable to open file: %s\n", argv[1]);return 1;}
     }
+
+    process_fp(fp);
+    if (fp!=stdin) 
+        fclose(fp);
     printf("\n");
     return 0;
-}//main
+}
