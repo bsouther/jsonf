@@ -43,14 +43,15 @@ void process_fp(FILE *fp) {
                         level--;    
                     padLine(level);
                 }else if (c == '{' || c == '[') {
-                    if (last != ',' && last != '[' && last != '{') padLine(level);
+                    if (last != ',' && last != '[' && last != '{') 
+                        padLine(level);
                 }
             }
         }
 
         last=c;
         if (instr || !(' ' == c || '\t' == c || '\r' == c || '\n' == c)) 
-        printf("%c",c);
+            printf("%c",c);
     }
 }
 
@@ -59,7 +60,10 @@ int main(int argc, char *argv[]){
 
     if (2 == argc){            /* Work from a file */
         fp = fopen(argv[1], "r");
-        if (!fp){printf("Unable to open file: %s\n", argv[1]);return 1;}
+        if (!fp){
+            printf("Unable to open file: %s\n", argv[1]);
+            return 1;
+        }
     }
 
     process_fp(fp);
