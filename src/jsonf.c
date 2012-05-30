@@ -30,7 +30,7 @@ void process_fp(FILE *fp) {
                 instr=!instr;    /* quote */
 
             if(!instr && last==':') 
-                printf("    ");
+                printf("\t");
 
             if(!instr) {
                 if (last == '{' || last == '[')    
