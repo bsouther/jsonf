@@ -1,0 +1,50 @@
+<html><head><title>jsonf - js</title>
+<script type="text/JavaScript">
+	function jsonf(inString)
+	{
+		var level=0,last=-1,c,instr=0,inesc=0,outString="";
+		function padLine(level) {outString+="\n";for (var i=0;i<level;i++) outString+="    ";}
+
+		for (var x=0;x<inString.length;x++)
+		{
+			c=inString.substr(x,1);
+
+			if (instr && c == '\\') {	/* escape */
+				inesc=!inesc;
+			}
+			else if (inesc) {
+				inesc = 0;
+				if ('"' == c){
+					outString+="\"";
+					last = '1';
+					continue;
+				}
+			}
+			else
+			{
+				if (last =='"')	instr=!instr;	/* quote */
+	
+				if (!instr && last==':') outString+="\t";
+	
+				if (!instr) {
+					if (last == '{' || last == '[')	padLine(++level);
+					else if (last == ',') 			padLine(level);
+	
+					if (c == '}' || c == ']') {
+						if (level > 0)	level--;	padLine(level);
+					}
+					else if (c == '{' || c == '[') {
+						if (last != ',' && last != '[' && last != '{') padLine(level);
+					}
+				}
+			}
+			last=c;
+			if (instr || !(' ' == c || '\t' == c || '\r' == c || '\n' == c)) outString+=c;
+		}
+		return outString;
+	}
+	function go(obj) {obj.value=jsonf(obj.value);}
+</script></head><body>
+ <textarea rows="30" cols="100" spellcheck="false" onChange="javascript:go(this);" placeholder="Enter JSON here to reformat"></textarea>
+ <p>Click outside the textarea to activate.</p>
+</body></html>
