@@ -74,9 +74,6 @@ void process_char(int c){
         }//!instr
     }//insec
 
-    /*
-    if(instr){ printf("+"); }else{ printf("-"); }
-    */
 
     printf("%c", c);
     last = c;
