@@ -30,7 +30,7 @@ void process_fp(FILE *fp) {
                 instr=!instr;    /* quote */
 
             if(!instr && last==':') 
-                printf("\t");
+                printf(" ");
 
             if(!instr) {
                 if (last == '{' || last == '[')    
@@ -56,7 +56,7 @@ void process_fp(FILE *fp) {
 }
 
 int main(int argc, char *argv[]){
-    FILE *fp=stdin;
+    FILE *fp = stdin;
 
     if (2 == argc){            /* Work from a file */
         fp = fopen(argv[1], "r");
@@ -72,3 +72,23 @@ int main(int argc, char *argv[]){
     printf("\n");
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
