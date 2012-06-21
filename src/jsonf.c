@@ -49,13 +49,14 @@ void process_fp(FILE *fp) {
             }
         }
 
+
         last=c;
         if (instr || !(' ' == c || '\t' == c || '\r' == c || '\n' == c)){ 
             printf("%c",c);
         }
         
         /* Should the end of the JSON document. Flush stdout */
-        if(level <= 0 && c == '}'){
+        if(level <= 0 && (c == '}' || c == ']' )){
             fflush(stdout);
         }  
     }
